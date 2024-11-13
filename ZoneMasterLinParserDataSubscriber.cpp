@@ -14,7 +14,7 @@
 bool ZoneMasterLinParserSubscriber::init()
 {
     DomainParticipantQos participantQos;
-    participantQos.name("Participant_linParser_ZWEIG");
+    participantQos.name("P_Zweig");
     //std::shared_ptr<eprosima::fastdds::rtps::SharedMemTransportDescriptor> shm_transport = std::make_shared<eprosima::fastdds::rtps::SharedMemTransportDescriptor>();
     //participantQos.transport().user_transports.push_back(shm_transport);
     participant_ = DomainParticipantFactory::get_instance()->create_participant(domainid, participantQos);
@@ -32,10 +32,12 @@ bool ZoneMasterLinParserSubscriber::init()
     // Create the subscriptions Topic
     topic_ = participant_->create_topic(
         "linParserTopic",
-        type_.get_type_name(),
+        //type_.get_type_name(),
+        "linParserData",
         tqos);
     if (topic_ == nullptr)
     {
+        std::cout << "Topic Null" << std::endl;
         return false;
     }
 
@@ -58,10 +60,10 @@ bool ZoneMasterLinParserSubscriber::init()
     reader_ = subscriber_->create_datareader(topic_, reader_qos, &listener_);
 
     if (reader_ == nullptr)
-    {
-        return false;
-    }
-
+        {
+            return false;
+        }
+    std::cout << "READER CREATED SUCCESSFULLY." << std::endl;
     return true;
 
 }
@@ -72,8 +74,7 @@ void ZoneMasterLinParserSubscriber::run()
 
 void ZoneMasterLinParserSubscriber::run(uint32_t number)
 {
-
-    std::cout << "Subscriber running until " << number << " samples have been received" << std::endl;
+    std::cout << "SUBSCRIBER RUNNING UNTIL " << number << "." << std::endl;
     while (number > listener_.samples_)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
