@@ -21,6 +21,7 @@
 #define HELLOWORLDSUBSCRIBER_H_
 
 #include "HelloWorldPubSubTypes.h"
+#include "ZoneMasterDataPubSubTypes.h"
 
 #include <fastdds/dds/domain/DomainParticipant.hpp>
 #include <fastdds/dds/subscriber/DataReaderListener.hpp>
@@ -79,7 +80,8 @@ private:
                 eprosima::fastdds::dds::DataReader* reader,
                 const eprosima::fastdds::dds::SubscriptionMatchedStatus& info) override;
 
-        HelloWorld hello_;
+        //HelloWorld hello_;
+        linFrames hello_;
 
         int matched_;
 

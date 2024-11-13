@@ -18,6 +18,7 @@
  */
 
 #include "HelloWorldSubscriber.h"
+#include "ZoneMasterLinParserDataSubscriber.h"
 
 #include <chrono>
 #include <thread>
@@ -37,7 +38,8 @@ HelloWorldSubscriber::HelloWorldSubscriber()
     , subscriber_(nullptr)
     , topic_(nullptr)
     , reader_(nullptr)
-    , type_(new HelloWorldPubSubType())
+      //, type_(new HelloWorldPubSubType())
+      , type_(new linFramesPubSubType())
 {
 }
 
@@ -54,7 +56,8 @@ bool HelloWorldSubscriber::init(
         factory->get_default_participant_qos(pqos);
     }
 
-    participant_ = factory->create_participant(0, pqos);
+    //participant_ = factory->create_participant(0, pqos);
+    participant_ = factory->create_participant(83, pqos);
 
     if (participant_ == nullptr)
     {
@@ -88,12 +91,15 @@ bool HelloWorldSubscriber::init(
     }
 
     topic_ = participant_->create_topic(
-        "HelloWorldTopic",
-        "HelloWorld",
+                                        //"HelloWorldTopic",
+                                        //"HelloWorld",
+                                        "linParserTopic",
+                                        type_.get_type_name(),
         tqos);
 
     if (topic_ == nullptr)
     {
+        std::cout << "TOPIC NOT CREATED." << std::endl;
         return false;
     }
 
@@ -110,6 +116,7 @@ bool HelloWorldSubscriber::init(
 
     if (reader_ == nullptr)
     {
+        std::cout << "READER NOT CREATED." << std::endl;
         return false;
     }
 
@@ -164,7 +171,8 @@ void HelloWorldSubscriber::SubListener::on_data_available(
         {
             samples_++;
             // Print your structure data here.
-            std::cout << "Message " << hello_.message() << " " << hello_.index() << " RECEIVED" << std::endl;
+            //std::cout << "Message " << hello_.message() << " " << hello_.index() << " RECEIVED" << std::endl;
+            std::cout << "Message" << " RECEIVED" << std::endl;
         }
     }
 }

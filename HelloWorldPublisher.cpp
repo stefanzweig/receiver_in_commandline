@@ -54,7 +54,7 @@ bool HelloWorldPublisher::init(
         factory->get_default_participant_qos(pqos);
     }
 
-    participant_ = factory->create_participant(0, pqos);
+    participant_ = factory->create_participant(83, pqos);
 
     if (participant_ == nullptr)
     {
@@ -169,8 +169,8 @@ void HelloWorldPublisher::runThread(
         {
             if (publish(false))
             {
-                std::cout << "Message: " << hello_.message() << " with index: " << hello_.index()
-                          << " SENT" << std::endl;
+                //std::cout << "Message: " << hello_.message() << " with index: " << hello_.index()
+                std::cout << "Message" << " SENT" << std::endl;
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
         }
