@@ -39,6 +39,7 @@ public:
         lin_frame_pubsubtype->setName("linParserData");
         type_ = TypeSupport(lin_frame_pubsubtype);
         this->domainid = domainid;
+        std::cout << "DOMAIN ID:" << this->domainid << std::endl;
     }
 
     virtual ~ZoneMasterLinParserSubscriber()
@@ -59,8 +60,8 @@ public:
     }
 
     bool init();
-
-    void run(uint32_t samples);
+    void run(uint32_t number);
+    void run();
     LinParserListener listener_;
 
 };

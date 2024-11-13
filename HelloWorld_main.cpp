@@ -321,7 +321,7 @@ int main(
                 ZoneMasterLinParserSubscriber  zone_subcriber(83);
                 if (zone_subcriber.init()) {
                     std::cout << "SUBSCRIBER INITIALIZED." << std::endl;
-                    zone_subcriber.run(100);
+                    zone_subcriber.run(10000);
                 }
             }
             break;

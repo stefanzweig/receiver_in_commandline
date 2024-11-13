@@ -66,10 +66,16 @@ bool ZoneMasterLinParserSubscriber::init()
 
 }
 
-void ZoneMasterLinParserSubscriber::run(uint32_t samples)
+void ZoneMasterLinParserSubscriber::run()
 {
-    while (listener_.samples_ < samples)
+}
+
+void ZoneMasterLinParserSubscriber::run(uint32_t number)
+{
+
+    std::cout << "Subscriber running until " << number << " samples have been received" << std::endl;
+    while (number > listener_.samples_)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 }
