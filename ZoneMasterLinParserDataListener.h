@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ZoneMasterDataPubSubTypes.h"
-//#include "ZoneMasterLinMessageDataListener.h"
 
 #include <chrono>
 #include <thread>
@@ -16,7 +15,6 @@
 #include <fastdds/dds/topic/TypeSupport.hpp>
 
 using namespace eprosima::fastdds::dds;
-
 
 class LinParserListener : public DataReaderListener
 {
@@ -34,20 +32,21 @@ public:
     {
         if (info.current_count_change == 1)
             {
-                std::cout << "LinParserSubscriber matched.";
+                std::cout << "LINPARSERSUBSCRIBER MATCHED." << std::endl;
             }
         else if (info.current_count_change == -1)
             {
-                std::cout << "LinParserSubscriber unmatched.";
+                std::cout << "LINPARSERSUBSCRIBER UNMATCHED." << std::endl;
             }
         else
             {
-                std::cout << info.current_count_change;
+                std::cout << info.current_count_change << std::endl;
             }
     }
 
     void on_data_available(DataReader* reader) override
     {
+        std::cout << "ON DATA AVAILABLE. "<< samples_ << " samples."<<std::endl;
         SampleInfo info;
         auto retcode = reader->take_next_sample(&linframes_, &info);
         if (retcode == ReturnCode_t::RETCODE_OK)
@@ -55,20 +54,13 @@ public:
                 if (info.valid_data)
                     {
                         samples_++;
+                        std::cout << "Sample Received. "<< samples_;
                     }
             }
         else if (retcode == ReturnCode_t::RETCODE_NO_DATA) {
             std::cout << "No data available, retrying...";
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
-    }
-
-    void on_requested_incompatible_qos(
-                                       DataReader* reader,
-                                       const RequestedIncompatibleQosStatus& status)
-    {
-        (void)reader;
-        (void)status;
     }
 
     linFrames linframes_;
