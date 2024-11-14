@@ -309,8 +309,10 @@ int main(
         case 2:
             {
                 HelloWorldSubscriber mysub;
-                if (mysub.init(use_environment_qos))
+                //if (mysub.init(use_environment_qos))
+                if (mysub.init(1))
                     {
+                        std::cout << "USE Environment" << std::endl;
                         mysub.run();
                     }
                 break;

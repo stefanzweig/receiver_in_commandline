@@ -51,18 +51,18 @@ bool HelloWorldSubscriber::init(
     auto factory = DomainParticipantFactory::get_instance();
 
     if (use_env)
-    {
-        factory->load_profiles();
-        factory->get_default_participant_qos(pqos);
-    }
+        {
+            factory->load_profiles();
+            factory->get_default_participant_qos(pqos);
+        }
 
     //participant_ = factory->create_participant(0, pqos);
     participant_ = factory->create_participant(83, pqos);
 
     if (participant_ == nullptr)
-    {
-        return false;
-    }
+        {
+            return false;
+        }
 
     //REGISTER THE TYPE
     //type_.register_type(participant_);
@@ -72,59 +72,61 @@ bool HelloWorldSubscriber::init(
     SubscriberQos sqos = SUBSCRIBER_QOS_DEFAULT;
 
     if (use_env)
-    {
-        participant_->get_default_subscriber_qos(sqos);
-    }
+        {
+            participant_->get_default_subscriber_qos(sqos);
+        }
 
     subscriber_ = participant_->create_subscriber(sqos, nullptr);
 
     if (subscriber_ == nullptr)
-    {
-        return false;
-    }
+        {
+            return false;
+        }
+    std::cout << "SUBCRIBER CREATED." << std::endl;
 
     //CREATE THE TOPIC
     TopicQos tqos = TOPIC_QOS_DEFAULT;
     participant_->get_default_topic_qos(tqos);
 
     if (use_env)
-    {
-        participant_->get_default_topic_qos(tqos);
-    }
+        {
+            participant_->get_default_topic_qos(tqos);
+        }
 
     topic_ = participant_->create_topic(
                                         //"HelloWorldTopic",
                                         //"HelloWorld",
                                         "linParserTopic",
                                         type_.get_type_name(),
-        tqos);
+                                        tqos);
 
     if (topic_ == nullptr)
-    {
-        std::cout << "TOPIC NOT CREATED." << std::endl;
-        return false;
-    }
+        {
+            std::cout << "TOPIC NOT CREATED." << std::endl;
+            return false;
+        }
+    std::cout << "TOPIC CREATED." << std::endl;
 
     // CREATE THE READER
     DataReaderQos rqos = DATAREADER_QOS_DEFAULT;
     //rqos.reliability().kind = RELIABLE_RELIABILITY_QOS;
     rqos.reliability().kind = BEST_EFFORT_RELIABILITY_QOS;
     rqos.durability().kind = VOLATILE_DURABILITY_QOS;
-    reader_qos.data_sharing().automatic();
+    rqos.data_sharing().automatic();
 
     if (use_env)
-    {
-        subscriber_->get_default_datareader_qos(rqos);
-    }
+        {
+            subscriber_->get_default_datareader_qos(rqos);
+        }
 
     reader_ = subscriber_->create_datareader(topic_, rqos, &listener_);
 
     if (reader_ == nullptr)
-    {
-        std::cout << "READER NOT CREATED." << std::endl;
-        return false;
-    }
-
+        {
+            std::cout << "READER NOT CREATED." << std::endl;
+            return false;
+        }
+    std::cout << "READER CREATED." << std::endl;
     return true;
 }
 
@@ -149,6 +151,7 @@ void HelloWorldSubscriber::SubListener::on_subscription_matched(
         DataReader*,
         const SubscriptionMatchedStatus& info)
 {
+    std::cout << "ON SUBSCRIPTION MATCHED" << std::endl;
     if (info.current_count_change == 1)
     {
         matched_ = info.total_count;
@@ -167,19 +170,20 @@ void HelloWorldSubscriber::SubListener::on_subscription_matched(
 }
 
 void HelloWorldSubscriber::SubListener::on_data_available(
-        DataReader* reader)
+                                                          DataReader* reader)
 {
+    std::cout << "ON DATA AVAILABLE" << std::endl;
     SampleInfo info;
     if (reader->take_next_sample(&hello_, &info) == ReturnCode_t::RETCODE_OK)
-    {
-        if (info.instance_state == ALIVE_INSTANCE_STATE)
         {
-            samples_++;
-            // Print your structure data here.
-            //std::cout << "Message " << hello_.message() << " " << hello_.index() << " RECEIVED" << std::endl;
-            std::cout << "Message" << " RECEIVED" << std::endl;
+            if (info.instance_state == ALIVE_INSTANCE_STATE)
+                {
+                    samples_++;
+                    // Print your structure data here.
+                    //std::cout << "Message " << hello_.message() << " " << hello_.index() << " RECEIVED" << std::endl;
+                    std::cout << "Message" << " RECEIVED" << std::endl;
+                }
         }
-    }
 }
 
 void HelloWorldSubscriber::run()
