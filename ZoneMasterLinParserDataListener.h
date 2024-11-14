@@ -46,7 +46,7 @@ public:
 
     void on_data_available(DataReader* reader) override
     {
-        std::cout << "ON DATA AVAILABLE. "<< samples_ << " samples."<<std::endl;
+        // std::cout << "ON DATA AVAILABLE. "<< samples_ << " samples."<<std::endl;
         SampleInfo info;
         auto retcode = reader->take_next_sample(&linframes_, &info);
         if (retcode == ReturnCode_t::RETCODE_OK)
@@ -54,7 +54,10 @@ public:
                 if (info.valid_data)
                     {
                         samples_++;
-                        std::cout << "Sample Received. "<< samples_;
+                        // std::cout << "Frames Received: "<< linframes_.len() << std::endl;
+                        for (linFrame frame: linframes_.linframes()) {
+                            std::cout << "Frame: "<< frame.id() << " Timestamp: "<< frame.timeStamp() << std::endl;
+                        }
                     }
             }
         else if (retcode == ReturnCode_t::RETCODE_NO_DATA) {
