@@ -14,7 +14,7 @@
 
 cmake_minimum_required(VERSION 3.20)
 
-project(DDSHelloWorldExample VERSION 1 LANGUAGES CXX)
+project(LPr VERSION 1 LANGUAGES CXX)
 
 # Find requirements
 if(NOT fastcdr_FOUND)
@@ -30,19 +30,19 @@ include(CheckCXXCompilerFlag)
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     check_cxx_compiler_flag(-std=c++11 SUPPORTS_CXX11)
     if(NOT SUPPORTS_CXX11)
-        message(FATAL_ERROR "Compiler doesn't support C++11")
+	message(FATAL_ERROR "Compiler doesn't support C++11")
     endif()
 endif()
 
-message(STATUS "Configuring HelloWorld example...")
+message(STATUS "Configuring Lin Parser Receiver...")
 file(GLOB DDS_HELLOWORLD_EXAMPLE_SOURCES_CXX "*.cxx")
 file(GLOB DDS_HELLOWORLD_EXAMPLE_SOURCES_CPP "*.cpp")
 
-add_executable(DDSHelloWorldExample ${DDS_HELLOWORLD_EXAMPLE_SOURCES_CXX} ${DDS_HELLOWORLD_EXAMPLE_SOURCES_CPP})
-target_compile_definitions(DDSHelloWorldExample PRIVATE
+add_executable(LPr ${DDS_HELLOWORLD_EXAMPLE_SOURCES_CXX} ${DDS_HELLOWORLD_EXAMPLE_SOURCES_CPP})
+target_compile_definitions(LPr PRIVATE
     $<$<AND:$<NOT:$<BOOL:${WIN32}>>,$<STREQUAL:"${CMAKE_BUILD_TYPE}","Debug">>:__DEBUG>
     $<$<BOOL:${INTERNAL_DEBUG}>:__INTERNALDEBUG> # Internal debug activated.
 )
-target_link_libraries(DDSHelloWorldExample fastrtps fastcdr fastdds::optionparser)
-install(TARGETS DDSHelloWorldExample
+target_link_libraries(LPr fastrtps fastcdr fastdds::optionparser)
+install(TARGETS LPr
     RUNTIME DESTINATION examples/cpp/dds/HelloWorldExample/${BIN_INSTALL_DIR})
