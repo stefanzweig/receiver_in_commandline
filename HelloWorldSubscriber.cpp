@@ -39,8 +39,11 @@ HelloWorldSubscriber::HelloWorldSubscriber()
     , topic_(nullptr)
     , reader_(nullptr)
       //, type_(new HelloWorldPubSubType())
-      , type_(new linFramesPubSubType())
+    , type_(nullptr)
 {
+    linFramesPubSubType* lin_frame_pubsubtype = new linFramesPubSubType();
+    lin_frame_pubsubtype->setName("linParserData");
+    type_ = TypeSupport(lin_frame_pubsubtype);
 }
 
 bool HelloWorldSubscriber::init(
@@ -50,11 +53,11 @@ bool HelloWorldSubscriber::init(
     pqos.name("Participant_sub");
     auto factory = DomainParticipantFactory::get_instance();
 
-    if (use_env)
-        {
-            factory->load_profiles();
-            factory->get_default_participant_qos(pqos);
-        }
+    // if (use_env)
+    //     {
+    //         factory->load_profiles();
+    //         factory->get_default_participant_qos(pqos);
+    //     }
 
     //participant_ = factory->create_participant(0, pqos);
     participant_ = factory->create_participant(83, pqos);
