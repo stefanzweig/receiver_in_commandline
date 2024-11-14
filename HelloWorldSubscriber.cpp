@@ -65,7 +65,8 @@ bool HelloWorldSubscriber::init(
     }
 
     //REGISTER THE TYPE
-    type_.register_type(participant_);
+    //type_.register_type(participant_);
+    participant_->register_type(type_);
 
     //CREATE THE SUBSCRIBER
     SubscriberQos sqos = SUBSCRIBER_QOS_DEFAULT;
@@ -84,6 +85,7 @@ bool HelloWorldSubscriber::init(
 
     //CREATE THE TOPIC
     TopicQos tqos = TOPIC_QOS_DEFAULT;
+    participant_->get_default_topic_qos(tqos);
 
     if (use_env)
     {
@@ -105,7 +107,10 @@ bool HelloWorldSubscriber::init(
 
     // CREATE THE READER
     DataReaderQos rqos = DATAREADER_QOS_DEFAULT;
-    rqos.reliability().kind = RELIABLE_RELIABILITY_QOS;
+    //rqos.reliability().kind = RELIABLE_RELIABILITY_QOS;
+    rqos.reliability().kind = BEST_EFFORT_RELIABILITY_QOS;
+    rqos.durability().kind = VOLATILE_DURABILITY_QOS;
+    reader_qos.data_sharing().automatic();
 
     if (use_env)
     {
